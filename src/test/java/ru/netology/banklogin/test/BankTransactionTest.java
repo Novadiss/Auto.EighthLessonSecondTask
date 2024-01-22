@@ -7,6 +7,7 @@ import org.junit.jupiter.api.*;
 import ru.netology.banklogin.data.DataHelper;
 import ru.netology.banklogin.data.SQLHelper;
 import ru.netology.banklogin.page.LoginPage;
+import ru.netology.banklogin.page.VerificationPage;
 
 import static com.codeborne.selenide.Selenide.open;
 import static io.restassured.RestAssured.given;
@@ -16,6 +17,7 @@ import static ru.netology.banklogin.data.SQLHelper.cleanDatabase;
 
 public class BankTransactionTest {
     LoginPage loginPage;
+    VerificationPage verificationPage;
 //    String requestBody = "{}";
 
 //    String login = DataHelper.getAuthInfoWithTestData().getLogin();
@@ -40,17 +42,17 @@ public class BankTransactionTest {
 
 
     @Test
-    @DisplayName("Should successfully login to dashboard with exist login and password from sut test data")
+    @DisplayName("Should ")
     void shouldSuccessfulLogin() {
-//        GsonBuilder login = new GsonBuilder();
-//        Gson gson = login.create();
-//        String objects = gson.toJson(DataHelper.getAuthInfoWithTestData());
+        GsonBuilder login = new GsonBuilder();
+        Gson gson = login.create();
+        String objects = gson.toJson(DataHelper.getAuthInfoWithTestData());
         given()
                 .baseUri("http://localhost:9999/api/auth")
                 .contentType(ContentType.JSON)
                 .accept(ContentType.JSON)
                 .and()
-                .body(loginPage.jsonLogin())
+                .body(objects)
                 .when()
                 .post("/posts")
                 .then()
@@ -58,17 +60,17 @@ public class BankTransactionTest {
 //        GsonBuilder verify = new GsonBuilder();
 //        Gson vgson = verify.create();
 //        String vobjects = vgson.toJson(SQLHelper.getVerificationCode());
-        var temp = given()
-                .baseUri("http://localhost:9999/api/auth/verification")
-                .contentType(ContentType.JSON)
-                .accept(ContentType.JSON)
-                .and()
-                .body(vobjects)
-                .when()
-                .post("/posts")
-                .then().extract().response()
-                ;
-        System.out.println(temp);
+//        var temp = given()
+//                .baseUri("http://localhost:9999/api/auth/verification")
+//                .contentType(ContentType.JSON)
+//                .accept(ContentType.JSON)
+//                .and()
+//                .body(verificationPage.veryfyJson())
+//                .when()
+//                .post("/posts")
+//                .then().extract().response()
+//                ;
+//        System.out.println(temp);
 //        given()
 //                .baseUri("http://localhost:9999/api/cards")
 //                .contentType(ContentType.JSON)

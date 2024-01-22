@@ -34,13 +34,12 @@ public class VerificationPage {
         verifyButton.click();
     }
 
-    public static String veryfyJson() {
-        GsonBuilder login = new GsonBuilder();
-        VerificationJson verificationJson = new VerificationJson();
-        verificationJson.login = DataHelper.getAuthInfoWithTestData().getLogin();
-        verificationJson.code = SQLHelper.getVerificationCode().getCode();
-        Gson gson = login.create();
-        String objects = gson.toJson(verificationJson);
+    public VerificationJson getVerifyForJson(){return new VerificationJson(DataHelper.getAuthInfoWithTestData().getLogin(), SQLHelper.getVerificationCode().getCode());}
+
+    public String veryfyJson() {
+        GsonBuilder verify = new GsonBuilder();
+        Gson verGson = verify.create();
+        String objects = verGson.toJson(getVerifyForJson());
         return objects;
     }
 

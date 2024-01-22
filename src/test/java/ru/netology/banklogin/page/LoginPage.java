@@ -28,8 +28,8 @@ public class LoginPage {
     }
 
     public static String jsonLogin() {
-        GsonBuilder login = new GsonBuilder();
-        Gson gson = login.create();
+        GsonBuilder builder= new GsonBuilder();
+        Gson gson = builder.create();
         String objects = gson.toJson(DataHelper.getAuthInfoWithTestData());
         return objects;
     }
