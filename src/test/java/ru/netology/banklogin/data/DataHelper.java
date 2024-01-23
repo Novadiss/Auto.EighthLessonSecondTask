@@ -1,12 +1,9 @@
 package ru.netology.banklogin.data;
 
-import com.github.javafaker.Faker;
 import lombok.Value;
 
-import java.util.Locale;
-
 public class DataHelper {
-    private static final Faker faker = new Faker(new Locale("en"));
+
 
     private DataHelper() {
     }
@@ -15,20 +12,17 @@ public class DataHelper {
         return new AuthInfo("vasya", "qwerty123");
     }
 
-    private static String generateRandomLogin() {
-        return faker.name().username();
+    public static CardInfo getFirstCard() {
+        return new CardInfo("5559 0000 0000 0001");
     }
 
-    private static String generateRandomPassword() {
-        return faker.internet().password();
+    public static CardInfo getSecondCard() {
+        return new CardInfo( "5559 0000 0000 0008");
     }
 
-    public static AuthInfo generateRandomUser() {
-        return new AuthInfo(generateRandomLogin(), generateRandomPassword());
-    }
-
-    public static VerificationCode generateRAndomVerificationCode() {
-        return new VerificationCode(faker.numerify("#####"));
+    @Value
+    public static class CardInfo {
+        String card;
     }
 
     @Value
@@ -41,5 +35,4 @@ public class DataHelper {
     public static class VerificationCode {
         String code;
     }
-
 }

@@ -1,27 +1,17 @@
 package ru.netology.banklogin.test;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.*;
-import ru.netology.banklogin.data.DataHelper;
-import ru.netology.banklogin.data.SQLHelper;
-import ru.netology.banklogin.page.LoginPage;
-import ru.netology.banklogin.page.VerificationPage;
 
-import static com.codeborne.selenide.Selenide.open;
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.is;
+import static ru.netology.banklogin.data.DataGenerator.LoginAuthentication.getLogonForRegisteredUser;
+import static ru.netology.banklogin.data.DataGenerator.LoginAuthentication.getToken;
+import static ru.netology.banklogin.data.DataGenerator.TransferCardByCard.postTransferFirstToSecond;
 import static ru.netology.banklogin.data.SQLHelper.cleanAuthCodes;
 import static ru.netology.banklogin.data.SQLHelper.cleanDatabase;
 
 public class BankTransactionTest {
-    LoginPage loginPage;
-    VerificationPage verificationPage;
-//    String requestBody = "{}";
-
-//    String login = DataHelper.getAuthInfoWithTestData().getLogin();
-//    String password = DataHelper.getAuthInfoWithTestData().getPassword();
 
     @AfterEach
     void tearDown() {
@@ -33,54 +23,23 @@ public class BankTransactionTest {
         cleanDatabase();
     }
 
-//    @BeforeEach
-//    public static void jsonObjects(String[] args) {
-//        JSONObject object = new JSONObject();
-//        object.put("login", DataHelper.getAuthInfoWithTestData().getLogin());
-//        object.put("password", DataHelper.getAuthInfoWithTestData().getPassword());
-//    }
-
-
     @Test
-    @DisplayName("Should ")
-    void shouldSuccessfulLogin() {
-        GsonBuilder login = new GsonBuilder();
-        Gson gson = login.create();
-        String objects = gson.toJson(DataHelper.getAuthInfoWithTestData());
-        given()
-                .baseUri("http://localhost:9999/api/auth")
+    @DisplayName("Should successful transaction from card to card")
+    void shouldSuccessfulTransactionCardByCard() {
+        getLogonForRegisteredUser();
+        var token = getToken();
+        Response response = given()
+                .baseUri("http://localhost:9999/api/transfer")
+                .auth().oauth2(token.getToken())
                 .contentType(ContentType.JSON)
                 .accept(ContentType.JSON)
                 .and()
-                .body(objects)
+                .body(postTransferFirstToSecond(5000))
                 .when()
-                .post("/posts")
-                .then()
-        ;
-//        GsonBuilder verify = new GsonBuilder();
-//        Gson vgson = verify.create();
-//        String vobjects = vgson.toJson(SQLHelper.getVerificationCode());
-//        var temp = given()
-//                .baseUri("http://localhost:9999/api/auth/verification")
-//                .contentType(ContentType.JSON)
-//                .accept(ContentType.JSON)
-//                .and()
-//                .body(verificationPage.veryfyJson())
-//                .when()
-//                .post("/posts")
-//                .then().extract().response()
-//                ;
-//        System.out.println(temp);
-//        given()
-//                .baseUri("http://localhost:9999/api/cards")
-//                .contentType(ContentType.JSON)
-//                .when()
-//                .get("/posts").then().log().body()
-//                .then()
-//                .extract()
-//                .response()
-//                .prettyPrint()
-        ;
+                .post()
+                .then().extract().response();
 
+        Assertions.assertEquals(200, response.statusCode());
     }
 }
+
