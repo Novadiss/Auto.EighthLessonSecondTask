@@ -17,12 +17,17 @@ public class DataHelper {
     }
 
     public static CardInfo getSecondCard() {
-        return new CardInfo( "5559 0000 0000 0008");
+        return new CardInfo("5559 0000 0000 0002");
     }
+
 
     @Value
     public static class CardInfo {
         String card;
+    }
+    @Value
+    public static class BalanceCard{
+        Integer balance;
     }
 
     @Value

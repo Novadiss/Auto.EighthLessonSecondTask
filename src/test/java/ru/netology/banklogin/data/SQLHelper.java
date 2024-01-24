@@ -40,4 +40,28 @@ public class SQLHelper {
         var connection = getConn();
         runner.execute(connection, "DELETE FROM auth_codes");
     }
+
+
+
+    @SneakyThrows
+    public static DataHelper.BalanceCard getFirstCardBalance() {
+        var codeSQL = ("SELECT balance_in_kopecks FROM cards WHERE `number` = '5559 0000 0000 0002'");
+        var conn = getConn();
+        var balance = runner.query(conn, codeSQL, new ScalarHandler<Integer>());
+        return new DataHelper.BalanceCard(balance);
+    }
+
+    @SneakyThrows
+    public static DataHelper.BalanceCard getSecondCardBalance() {
+        var codeSQL = ("SELECT balance_in_kopecks FROM cards WHERE `number` = '5559 0000 0000 0008'");
+        var conn = getConn();
+        var balance = runner.query(conn, codeSQL, new ScalarHandler<Integer>());
+        return new DataHelper.BalanceCard(balance);
+    }
+
+    @SneakyThrows
+    public static void getLastTransaction(){
+        var connection = getConn();
+        runner.execute(connection, "SELECT source, target, amount_in_kopecks  FROM card_transactions ORDER BY created DESC LIMIT 1");
+    }
 }
