@@ -1,13 +1,14 @@
 package ru.netology.banklogin.data;
 
-import io.restassured.response.Response;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import lombok.Value;
 
 import static io.restassured.RestAssured.given;
+import static ru.netology.banklogin.data.DataGenerator.LoginAuthentication.getVerifyToken;
 
 public class DataGenerator {
     private static final RequestSpecification requestSpec = new RequestSpecBuilder()
@@ -42,9 +43,21 @@ public class DataGenerator {
                 .post("/api/auth/verification")
                 .then()
                 .extract()
-                .response()
-        ;
-                return response.jsonPath().getString("token");
+                .response();
+        return response.jsonPath().getString("token");
+    }
+
+    public static void transactionCardByCard(String firstCard, String secondCard, int amount) {
+        given()
+                .spec(requestSpec)
+                .auth().oauth2(getVerifyToken().getToken())
+                .and()
+                .body(TransferCardByCard.postCardByCard(firstCard, secondCard, amount))
+                .when()
+                .post("/api/transfer")
+                .then()
+                .statusCode(200)
+                ;
     }
 
     public static class LoginAuthentication {
@@ -64,19 +77,20 @@ public class DataGenerator {
             return loginPostRequest(getLogonInfo());
         }
 
-        public static Token getToken(){
+        public static Token getVerifyToken() {
             return new Token(valueOfToken());
         }
     }
 
-    public static class TransferCardByCard{
-        private TransferCardByCard(){
+    public static class TransferCardByCard {
+        private TransferCardByCard() {
 
         }
 
-        public static Transfer postTransferFirstToSecond(Integer amount){
-            return new Transfer(DataHelper.getFirstCard().getCard(), DataHelper.getSecondCard().getCard(), amount);
+        public static Transfer postCardByCard(String firstCard, String secondCard, int amount) {
+            return new Transfer(firstCard, secondCard, amount);
         }
+
     }
 
     @Value
@@ -92,7 +106,7 @@ public class DataGenerator {
     }
 
     @Value
-    public static class Token{
+    public static class Token {
         String token;
     }
 
@@ -100,6 +114,6 @@ public class DataGenerator {
     public static class Transfer {
         String from;
         String to;
-        Integer amount;
+        int amount;
     }
 }

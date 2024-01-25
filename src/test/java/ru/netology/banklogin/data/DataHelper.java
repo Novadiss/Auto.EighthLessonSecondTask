@@ -25,8 +25,9 @@ public class DataHelper {
     public static class CardInfo {
         String card;
     }
+
     @Value
-    public static class BalanceCard{
+    public static class BalanceCard {
         Integer balance;
     }
 
